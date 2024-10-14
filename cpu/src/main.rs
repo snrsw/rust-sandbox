@@ -1,9 +1,10 @@
+// allow upper case constants
+#![allow(clippy::upper_case_acronyms)]
 struct CPU {
     registers: [u8; 16],
     position_in_memory: usize,
     memory: [u8; 0x1000],
 }
-
 
 impl CPU {
     fn read_opcode(&self) -> u16 {
@@ -11,7 +12,7 @@ impl CPU {
         let op_byte1 = self.memory[p] as u16;
         let op_byte2 = self.memory[p + 1] as u16;
 
-        op_byte1<<8|op_byte2
+        op_byte1 << 8 | op_byte2
     }
 
     fn run(&mut self) {
@@ -25,7 +26,9 @@ impl CPU {
             let d = (opcode & 0x000F) as u8;
 
             match (c, x, y, d) {
-                (0,0,0,0) => {return;},
+                (0, 0, 0, 0) => {
+                    return;
+                }
                 (0x8, _, _, 0x4) => self.add_xy(x, y),
                 _ => todo!("opcode {:04x}", opcode),
             }
@@ -60,9 +63,12 @@ fn main() {
     cpu.registers[3] = 10;
 
     let mem = &mut cpu.memory;
-    mem[0] = 0x80; mem[1] = 0x14;
-    mem[2] = 0x80; mem[3] = 0x24;
-    mem[4] = 0x80; mem[5] = 0x34;
+    mem[0] = 0x80;
+    mem[1] = 0x14;
+    mem[2] = 0x80;
+    mem[3] = 0x24;
+    mem[4] = 0x80;
+    mem[5] = 0x34;
 
     cpu.run();
 
